@@ -27,10 +27,49 @@ public class SerialComm {
 	}
 		
 	// TODO: Add writeByte() method from Studio 5
-	
+	public boolean writeByte(byte singleByte) {
+		if(debug) {
+			System.out.print("<0x");
+			System.out.print(Integer.toHexString(singleByte));
+			System.out.println(">");
+		}
+		try {
+			port.writeByte(singleByte);
+			return true;
+		} catch (SerialPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
 	// TODO: Add available() method
-	
+	public boolean available() throws SerialPortException {
+		return(port.getInputBufferBytesCount() != 0);
+	}
 	// TODO: Add readByte() method	
-	
+	public byte readByte() throws SerialPortException {
+		byte myByte = port.readBytes(1)[0];
+		if(debug) {
+			if(myByte!=10&&myByte!=13) {
+				System.out.println();
+				System.out.print("<0x");
+				System.out.print(Integer.toHexString(myByte));
+				System.out.println(">");
+			}
+		}
+				
+		return(myByte);
+	}
 	// TODO: Add a main() method
+	public static void main(String[] args) throws SerialPortException {
+		SerialComm myPort = new SerialComm("COM3");
+		while(true) {
+			
+			if(myPort.available()) {
+				System.out.print((char) myPort.readByte());
+			}
+			
+		}
+		
+	}
 }
